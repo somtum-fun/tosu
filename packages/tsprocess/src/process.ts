@@ -141,7 +141,7 @@ export class Process {
                     .slice(2)
                     .replace(/\\/g, '/')
                     .trim()
-                    .replace(/\/osu!\.exe$/, ''); // Format windows dir to linux style.
+                    .replace(/\/(osu!|somtum-stable)\.exe$/i, ''); // Format windows dir to linux style.
             }
         }
 
@@ -156,6 +156,11 @@ export class Process {
 
     getProcessCommandLine(): string {
         return ProcessUtils.getProcessCommandLine(this.handle);
+    }
+
+    /** One environment variable of the target process ("" when unset or unreadable). */
+    getProcessEnv(name: string): string {
+        return ProcessUtils.getProcessEnv(this.handle, name) || '';
     }
 
     getProcessCwd(): string {

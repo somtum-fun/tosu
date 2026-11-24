@@ -158,6 +158,49 @@ std::string memory::get_process_command_line(void *process) {
   return commandLine;
 }
 
+std::string memory::get_process_env(void *process, const std::string &name) {
+  // The target's own environment block: PEB -> ProcessParameters -> Environment / EnvironmentSize.
+  // Offsets are those of the native (x64) RTL_USER_PROCESS_PARAMETERS; winternl.h hides them. A
+  // WoW64 target (32-bit osu!) has a native PEB too, whose parameters carry the same block.
+#if defined(_WIN64)
+  constexpr std::size_t ENV_OFFSET = 0x80, ENV_SIZE_OFFSET = 0x3F0;
+#else
+  constexpr std::size_t ENV_OFFSET = 0x48, ENV_SIZE_OFFSET = 0x290;
+#endif
+  PROCESS_BASIC_INFORMATION pbi = {};
+  if (NtQueryInformationProcess(process, ProcessBasicInformation, &pbi, sizeof(pbi), NULL) != 0) return "";
+  PEB peb = {};
+  if (!ReadProcessMemory(process, pbi.PebBaseAddress, &peb, sizeof(peb), NULL)) return "";
+  const auto params = reinterpret_cast<uintptr_t>(peb.ProcessParameters);
+  uintptr_t env_ptr = 0;
+  SIZE_T env_size = 0;
+  if (!ReadProcessMemory(process, reinterpret_cast<void *>(params + ENV_OFFSET), &env_ptr, sizeof(env_ptr), NULL)) return "";
+  if (!ReadProcessMemory(process, reinterpret_cast<void *>(params + ENV_SIZE_OFFSET), &env_size, sizeof(env_size), NULL)) env_size = 0;
+  if (env_ptr == 0) return "";
+  if (env_size == 0 || env_size > 0x40000) env_size = 0x8000;
+  std::vector<WCHAR> block(env_size / sizeof(WCHAR) + 1, 0);
+  SIZE_T got = 0;
+  ReadProcessMemory(process, reinterpret_cast<void *>(env_ptr), block.data(), env_size, &got);
+  if (got == 0) return "";
+  std::wstring wname(name.begin(), name.end());
+  wname += L'=';
+  std::size_t i = 0, n = got / sizeof(WCHAR);
+  while (i < n && block[i] != 0) {
+    std::size_t end = i;
+    while (end < n && block[end] != 0) end++;
+    if (end - i >= wname.size() && _wcsnicmp(&block[i], wname.c_str(), wname.size()) == 0) {
+      const WCHAR *value = &block[i + wname.size()];
+      int vlen = static_cast<int>(end - i - wname.size());
+      int bytes = WideCharToMultiByte(CP_UTF8, 0, value, vlen, NULL, 0, NULL, NULL);
+      std::string out(bytes, '\0');
+      WideCharToMultiByte(CP_UTF8, 0, value, vlen, out.data(), bytes, NULL, NULL);
+      return out;
+    }
+    i = end + 1;
+  }
+  return "";
+}
+
 void *memory::get_foreground_window_process() {
   DWORD process_id;
 

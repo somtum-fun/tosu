@@ -221,6 +221,18 @@ export class StableMemory extends AbstractMemory<OsuPatternData> {
         return this.scanPatterns;
     }
 
+    /** Distance back from baseAddr to the operand holding Player.mode's address (the ruleset)
+     * in the same method: 0x33 on ppy's builds; Somtum.Client sets its own. */
+    gamemodeBaseOffset = 0x33;
+
+    /** Swaps in signatures for a build whose code differs (osu!somtum's Somtum.Client). */
+    useScanPatterns(overrides: Partial<ScanPatterns>) {
+        this.scanPatterns = {
+            ...this.scanPatterns,
+            ...overrides
+        } as ScanPatterns;
+    }
+
     audioVelocityBase(): IAudioVelocityBase {
         if (this.process === null) {
             throw new Error('Process not found');
@@ -540,7 +552,7 @@ export class StableMemory extends AbstractMemory<OsuPatternData> {
 
             // [Base - 0x33] + 0x8
             const retries = this.process.readInt(
-                this.process.readInt(baseAddr - 0x33) + 0x8
+                this.process.readInt(baseAddr - this.gamemodeBaseOffset) + 0x8
             );
             // [[[Ruleset + 0x64] + 0x38] + 0x28]
             const playerName = this.process.readSharpString(
@@ -902,7 +914,9 @@ export class StableMemory extends AbstractMemory<OsuPatternData> {
             const beatmapAddr = this.process.readPointer(baseAddr - 0xc);
             if (beatmapAddr === 0) return 'beatmapAddr is 0';
 
-            const gamemode = this.process.readPointer(baseAddr - 0x33);
+            const gamemode = this.process.readPointer(
+                baseAddr - this.gamemodeBaseOffset
+            );
             const checksum = this.process.readSharpString(
                 this.process.readInt(beatmapAddr + 0x6c)
             );
@@ -920,7 +934,7 @@ export class StableMemory extends AbstractMemory<OsuPatternData> {
             }
 
             const plays = this.process.readInt(
-                this.process.readInt(baseAddr - 0x33) + 0xc
+                this.process.readInt(baseAddr - this.gamemodeBaseOffset) + 0xc
             );
             const artist = this.process.readSharpString(
                 this.process.readInt(beatmapAddr + 0x18)

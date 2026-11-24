@@ -146,6 +146,22 @@ std::string memory::get_process_cwd(void *process) {
   return "";
 }
 
+std::string memory::get_process_env(void *process, const std::string &name) {
+  const auto pid = reinterpret_cast<uintptr_t>(process);
+  const auto environ = read_file("/proc/" + std::to_string(pid) + "/environ");
+  const auto prefix = name + "=";
+  std::size_t start = 0;
+  while (start < environ.size()) {
+    auto end = environ.find('\0', start);
+    if (end == std::string::npos) end = environ.size();
+    if (environ.compare(start, prefix.size(), prefix) == 0) {
+      return environ.substr(start + prefix.size(), end - start - prefix.size());
+    }
+    start = end + 1;
+  }
+  return "";
+}
+
 bool memory::read_buffer(void *process, uintptr_t address, std::size_t size, uint8_t *buffer) {
   const auto pid = reinterpret_cast<uintptr_t>(process);
 

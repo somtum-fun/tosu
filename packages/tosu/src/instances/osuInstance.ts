@@ -10,6 +10,12 @@ import fs from 'fs';
 
 import { AbstractInstance } from '@/instances/index';
 import { StableMemory } from '@/memory/stable';
+import {
+    SOMTUM_GAMEMODE_BASE_OFFSET,
+    SOMTUM_STABLE_PATTERNS,
+    isSomtumStable,
+    resolveSomtumDataDir
+} from '@/somtum';
 import { safeJoin } from '@/utils/converters';
 
 export class OsuInstance extends AbstractInstance {
@@ -19,6 +25,17 @@ export class OsuInstance extends AbstractInstance {
         super(pid, Bitness.x86);
 
         this.memory = new StableMemory(this.process, this);
+
+        if (isSomtumStable(this.process)) {
+            this.isSomtumClient = true;
+            this.memory.useScanPatterns(SOMTUM_STABLE_PATTERNS);
+            this.memory.gamemodeBaseOffset = SOMTUM_GAMEMODE_BASE_OFFSET;
+            this.path = resolveSomtumDataDir(this.process, this.path);
+            wLogger.info(
+                `%${ClientType[this.client]}%`,
+                `osu!somtum client (somtum-stable.exe), osu! folder: ${this.path}`
+            );
+        }
     }
 
     async regularDataLoop() {

@@ -14,6 +14,7 @@ import { setTimeout } from 'node:timers/promises';
 import { Process } from 'tsprocess';
 
 import type { AbstractInstance } from '@/instances';
+import { SOMTUM_STABLE_PROCESS_NAMES } from '@/somtum';
 
 import { LazerInstance } from './lazerInstance';
 import { OsuInstance } from './osuInstance';
@@ -74,7 +75,10 @@ export class InstanceManager {
         try {
             let osuProcesses = Process.findProcesses([
                 'osu!.exe',
-                'osulazer.exe'
+                'osulazer.exe',
+                // osu!somtum's own stable build (Somtum.Client, stable40 + cuttingedge). On Linux
+                // (Wine) /proc/<pid>/comm cuts names at 15 chars: "somtum-stable.e" still matches.
+                ...SOMTUM_STABLE_PROCESS_NAMES
             ]);
 
             let lazerOnLinux = false;

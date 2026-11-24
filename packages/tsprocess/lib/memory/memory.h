@@ -40,6 +40,8 @@ uint64_t get_process_start_time(void *process);
 std::string get_process_path(void *process);
 std::string get_process_command_line(void *process);
 std::string get_process_cwd(void *process);
+// Value of one environment variable of another process ("" when unset/unreadable).
+std::string get_process_env(void *process, const std::string &name);
 void *get_foreground_window_process();
 
 bool read_buffer(void *process, uintptr_t address, std::size_t size, uint8_t *buffer);
