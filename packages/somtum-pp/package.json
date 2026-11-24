@@ -1,0 +1,12 @@
+{
+  "name": "@somtum/pp",
+  "version": "0.1.0",
+  "description": "osu!somtum pp (vanilla, Relax, Autopilot) as the somtum server pays it, in WebAssembly.",
+  "license": "MIT",
+  "type": "module",
+  "main": "index.mjs",
+  "types": "index.d.ts",
+  "exports": { ".": { "types": "./index.d.ts", "default": "./index.mjs" } },
+  "files": ["index.mjs", "index.d.ts", "wasm.mjs"],
+  "repository": "github:somtum-fun/somtum-pp"
+}

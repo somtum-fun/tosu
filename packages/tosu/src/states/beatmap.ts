@@ -22,6 +22,11 @@ import { BeatmapDecoder } from 'osu-parsers';
 import type { BeatmapStrains } from '@/api/types/v1';
 import type { HitWindow } from '@/api/types/v2';
 import { AbstractInstance } from '@/instances';
+import {
+    SomtumPerformance,
+    isRelaxOrAutopilot,
+    toTosuAttributes
+} from '@/somtum/pp';
 import { AbstractState } from '@/states';
 import { fixDecimals, safeJoin } from '@/utils/converters';
 import { sanitizeMods } from '@/utils/osuMods';
@@ -109,6 +114,8 @@ export class BeatmapPP extends AbstractState {
     difficultyAttributes?: DifficultyAttrs;
     diffStrains?: StrainsData;
     maxScore?: ScoreInfoData;
+    /** osu!somtum pp (somtum-pp): the pp numbers tosu reports. */
+    somtum = new SomtumPerformance();
     performanceAttributes?: PerformanceAttrsData;
 
     mode: number;
@@ -449,6 +456,40 @@ export class BeatmapPP extends AbstractState {
                 this.ppAcc = ppAcc as any;
             }
 
+            // osu!somtum: pp as the server pays it (Relax/Autopilot included).
+            const somtumLazer = this.game.client === ClientType.lazer;
+            let somtumSS = null;
+            if (this.somtum.load(this.beatmapContent)) {
+                somtumSS = this.somtum.atAccuracy(
+                    currentMode,
+                    currentMods,
+                    100,
+                    somtumLazer
+                );
+                if (somtumSS) {
+                    this.performanceAttributes = toTosuAttributes(
+                        somtumSS,
+                        this.performanceAttributes
+                    );
+                }
+                if (config.calculatePP) {
+                    const ppAcc: { [key: string]: number } = {};
+                    for (const acc of [
+                        100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90
+                    ]) {
+                        ppAcc[acc] = fixDecimals(
+                            this.somtum.atAccuracy(
+                                currentMode,
+                                currentMods,
+                                acc,
+                                somtumLazer
+                            )?.pp ?? 0
+                        );
+                    }
+                    this.ppAcc = ppAcc as any;
+                }
+            }
+
             const calculationTime = performance.now();
             wLogger.time(
                 `%${ClientType[this.game.client]}%`,
@@ -566,8 +607,14 @@ export class BeatmapPP extends AbstractState {
                 spinners: this.lazerBeatmap.spinnable,
                 holds: this.lazerBeatmap.holdable,
                 maxCombo: difficulty.maxCombo,
-                fullStars: difficulty.stars,
-                stars: difficulty.stars,
+                fullStars:
+                    somtumSS && isRelaxOrAutopilot(currentMods)
+                        ? somtumSS.stars
+                        : difficulty.stars,
+                stars:
+                    somtumSS && isRelaxOrAutopilot(currentMods)
+                        ? somtumSS.stars
+                        : difficulty.stars,
                 aim: difficulty.aim,
                 speed: difficulty.speed,
                 flashlight: difficulty.flashlight,

@@ -3,3 +3,4 @@ node_modules/
 dist/
 static/
 packages/server/assets/*
+packages/somtum-pp/

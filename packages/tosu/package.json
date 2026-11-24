@@ -1,6 +1,6 @@
 {
     "name": "tosu",
-    "version": "4.26.3",
+    "version": "4.26.3-somtum.1",
     "type": "module",
     "main": "dist/index.js",
     "bin": "dist/index.js",
@@ -14,6 +14,7 @@
         "compile:linux": "pnpm run genver && pnpm run ts:compile && pkg --output dist/tosu --debug --config pkg.linux.json --compress Zstd dist/index.js"
     },
     "dependencies": {
+        "@somtum/pp": "workspace:*",
         "@tosu/common": "workspace:*",
         "@tosu/ingame-overlay-updater": "workspace:*",
         "@tosu/server": "workspace:*",

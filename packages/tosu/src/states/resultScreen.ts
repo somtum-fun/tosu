@@ -182,6 +182,30 @@ export class ResultScreen extends AbstractState {
             this.pp = curPerformance.pp;
             this.fcPP = fcPerformance.pp;
 
+            // osu!somtum: pp as the server pays it (Relax/Autopilot included).
+            if (beatmapPP.somtum.ready) {
+                const somtumLazer = this.game.client === ClientType.lazer;
+                const somtum = beatmapPP.somtum.fromStatistics(
+                    this.mode,
+                    this.mods,
+                    this.statistics,
+                    this.maxCombo,
+                    {
+                        lazer: somtumLazer,
+                        partial: false,
+                        legacyTotalScore: this.score
+                    }
+                );
+                const somtumFc = beatmapPP.somtum.fullCombo(
+                    this.mode,
+                    this.mods,
+                    this.statistics,
+                    somtumLazer
+                );
+                if (somtum) this.pp = somtum.pp;
+                if (somtumFc) this.fcPP = somtumFc.pp;
+            }
+
             wLogger.time(
                 `%${ClientType[this.game.client]}%`,
                 `Result screen PP calc: PP: %${(t2 - t1).toFixed(2)}ms%, FC PP: %${(performance.now() - t2).toFixed(2)}ms%`

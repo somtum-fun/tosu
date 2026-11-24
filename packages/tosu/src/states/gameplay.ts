@@ -5,6 +5,7 @@ import {
 } from '@tosuapp/lazer-calculator-prebuilt';
 
 import { AbstractInstance } from '@/instances';
+import { isRelaxOrAutopilot, toTosuAttributes } from '@/somtum/pp';
 import { AbstractState } from '@/states/index';
 import type {
     KeyOverlayButton,
@@ -539,12 +540,32 @@ export class Gameplay extends AbstractState {
             );
 
             const currDiff = currDiffAttrs.getData();
+
+            // osu!somtum: pp as the server pays it (Relax/Autopilot included).
+            const somtumLazer = this.game.client === ClientType.lazer;
+            const somtum = beatmapPP.somtum.ready
+                ? beatmapPP.somtum.fromStatistics(
+                      this.mode,
+                      this.mods,
+                      this.statistics,
+                      this.maxCombo,
+                      { lazer: somtumLazer, partial: true }
+                  )
+                : null;
+
             beatmapPP.updateCurrentAttributes(
-                currDiff.stars,
-                currPerformance.pp
+                somtum && isRelaxOrAutopilot(this.mods)
+                    ? somtum.stars
+                    : currDiff.stars,
+                somtum ? somtum.pp : currPerformance.pp
             );
 
-            beatmapPP.updatePPAttributes('curr', currPerformance);
+            beatmapPP.updatePPAttributes(
+                'curr',
+                somtum
+                    ? toTosuAttributes(somtum, currPerformance)
+                    : currPerformance
+            );
 
             const maxAchievablePerformance =
                 currentBeatmap.calculatePerformance(
@@ -560,7 +581,16 @@ export class Gameplay extends AbstractState {
                 );
 
             beatmapPP.currAttributes.maxAchievable =
-                maxAchievablePerformance.pp;
+                (beatmapPP.somtum.ready
+                    ? beatmapPP.somtum.maxAchievable(
+                          this.mode,
+                          this.mods,
+                          this.statistics,
+                          this.maxCombo,
+                          this.combo,
+                          somtumLazer
+                      )?.pp
+                    : undefined) ?? maxAchievablePerformance.pp;
 
             const fcPerformance = currentBeatmap.calculatePerformance(
                 beatmapPP.difficultyAttributes,
@@ -571,8 +601,23 @@ export class Gameplay extends AbstractState {
                     beatmapPP.maxScore
                 )
             );
-            beatmapPP.currAttributes.fcPP = fcPerformance.pp;
-            beatmapPP.updatePPAttributes('fc', fcPerformance);
+            const somtumFc = beatmapPP.somtum.ready
+                ? beatmapPP.somtum.fullCombo(
+                      this.mode,
+                      this.mods,
+                      this.statistics,
+                      somtumLazer
+                  )
+                : null;
+            beatmapPP.currAttributes.fcPP = somtumFc
+                ? somtumFc.pp
+                : fcPerformance.pp;
+            beatmapPP.updatePPAttributes(
+                'fc',
+                somtumFc
+                    ? toTosuAttributes(somtumFc, fcPerformance)
+                    : fcPerformance
+            );
 
             this.previousPlayTime = global.playTime;
 
