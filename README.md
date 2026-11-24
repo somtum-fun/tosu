@@ -1,3 +1,12 @@
+> **osu!somtum fork.** This is [tosu](https://github.com/tosuapp/tosu) for [osu!somtum](https://somtum.fun):
+> - works with osu!somtum's own stable client (`somtum-stable.exe`, stable40 and cuttingedge), including
+>   when it lives outside the osu! folder (`SOMTUM_OSU_DIR` / `somtum-stable.json`);
+> - pp comes from [somtum-pp](https://github.com/somtum-fun/somtum-pp): the pp the somtum server pays,
+>   with **Relax** (akatsuki osu_2019) and **Autopilot** pp and stars;
+> - updates from [somtum-fun/tosu releases](https://github.com/somtum-fun/tosu/releases), not upstream.
+>
+> Everything else is upstream tosu; please report fork-specific issues here, not to tosuapp.
+
 <p align="center">
   <a href="https://github.com/tosuapp/tosu/blob/master/LICENSE" target="_blank"><img alt="License: GPL--3.0" src="https://img.shields.io/github/license/tosuapp/tosu?style=for-the-badge&color=%23A27456" /></a>
   <img alt="Version" src="https://img.shields.io/github/release/tosuapp/tosu.svg?style=for-the-badge&color=%235686A2" />

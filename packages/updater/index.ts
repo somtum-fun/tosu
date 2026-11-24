@@ -37,6 +37,10 @@ const deleteNotLocked = async (filePath: string) => {
     }
 };
 
+/** osu!somtum's fork updates from its own releases, never upstream's (that would drop the
+ * somtum-stable.exe support and somtum pp). */
+const UPDATE_REPOSITORY = 'somtum-fun/tosu';
+
 export const checkUpdates = async (from: 'autoUpdater' | 'startup') => {
     wLogger.info('Checking for updates...');
 
@@ -62,7 +66,7 @@ export const checkUpdates = async (from: 'autoUpdater' | 'startup') => {
         }
 
         const request = await fetch(
-            `https://api.github.com/repos/tosuapp/tosu/releases/latest`
+            `https://api.github.com/repos/${UPDATE_REPOSITORY}/releases/latest`
         );
         const json = (await request.json()) as any;
         const {
