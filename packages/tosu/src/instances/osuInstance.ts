@@ -33,7 +33,7 @@ export class OsuInstance extends AbstractInstance {
             this.path = resolveSomtumDataDir(this.process, this.path);
             wLogger.info(
                 `%${ClientType[this.client]}%`,
-                `osu!somtum client (somtum-stable.exe), osu! folder: ${this.path}`
+                `somtum.fun client (somtum-stable.exe), osu! folder: ${this.path}`
             );
         }
     }

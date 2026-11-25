@@ -1,7 +1,7 @@
 /**
- * osu!somtum additions to tosu: our own stable build (Somtum.Client) and our pp.
+ * somtum.fun additions to tosu: our own stable build (Somtum.Client) and our pp.
  *
- * Somtum.Client is osu!stable recompiled for osu!somtum, shipped as `somtum-stable.exe` in two
+ * Somtum.Client is osu!stable recompiled for somtum.fun, shipped as `somtum-stable.exe` in two
  * streams (stable40, cuttingedge). It is the same game underneath, so the stable reader works on
  * it; three things differ:
  *  - the process name;

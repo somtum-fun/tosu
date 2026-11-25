@@ -114,7 +114,7 @@ export class BeatmapPP extends AbstractState {
     difficultyAttributes?: DifficultyAttrs;
     diffStrains?: StrainsData;
     maxScore?: ScoreInfoData;
-    /** osu!somtum pp (somtum-pp): the pp numbers tosu reports. */
+    /** somtum.fun pp (somtum-pp): the pp numbers tosu reports. */
     somtum = new SomtumPerformance();
     performanceAttributes?: PerformanceAttrsData;
 
@@ -456,7 +456,7 @@ export class BeatmapPP extends AbstractState {
                 this.ppAcc = ppAcc as any;
             }
 
-            // osu!somtum: pp as the server pays it (Relax/Autopilot included).
+            // somtum.fun: pp as the server pays it (Relax/Autopilot included).
             const somtumLazer = this.game.client === ClientType.lazer;
             let somtumSS = null;
             if (this.somtum.load(this.beatmapContent)) {

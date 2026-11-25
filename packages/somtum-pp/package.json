@@ -1,7 +1,7 @@
 {
   "name": "@somtum/pp",
   "version": "0.1.0",
-  "description": "osu!somtum pp (vanilla, Relax, Autopilot) as the somtum server pays it, in WebAssembly.",
+  "description": "somtum.fun pp (vanilla, Relax, Autopilot) as the somtum server pays it, in WebAssembly.",
   "license": "MIT",
   "type": "module",
   "main": "index.mjs",

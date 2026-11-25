@@ -1,5 +1,5 @@
 /**
- * pp from somtum-pp: what the osu!somtum server pays, Relax and Autopilot included (the lazer
+ * pp from somtum-pp: what the somtum.fun server pays, Relax and Autopilot included (the lazer
  * calculator tosu ships has no Relax/Autopilot pp). tosu keeps its own calculator for everything
  * else (strains graph, hit windows, difficulty breakdown); the pp numbers, and the stars of a
  * Relax/Autopilot play, come from here.

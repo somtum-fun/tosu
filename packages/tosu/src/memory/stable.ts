@@ -225,7 +225,7 @@ export class StableMemory extends AbstractMemory<OsuPatternData> {
      * in the same method: 0x33 on ppy's builds; Somtum.Client sets its own. */
     gamemodeBaseOffset = 0x33;
 
-    /** Swaps in signatures for a build whose code differs (osu!somtum's Somtum.Client). */
+    /** Swaps in signatures for a build whose code differs (somtum.fun's Somtum.Client). */
     useScanPatterns(overrides: Partial<ScanPatterns>) {
         this.scanPatterns = {
             ...this.scanPatterns,

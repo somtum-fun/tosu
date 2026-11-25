@@ -541,7 +541,7 @@ export class Gameplay extends AbstractState {
 
             const currDiff = currDiffAttrs.getData();
 
-            // osu!somtum: pp as the server pays it (Relax/Autopilot included).
+            // somtum.fun: pp as the server pays it (Relax/Autopilot included).
             const somtumLazer = this.game.client === ClientType.lazer;
             const somtum = beatmapPP.somtum.ready
                 ? beatmapPP.somtum.fromStatistics(

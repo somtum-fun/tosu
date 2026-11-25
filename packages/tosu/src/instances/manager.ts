@@ -76,7 +76,7 @@ export class InstanceManager {
             let osuProcesses = Process.findProcesses([
                 'osu!.exe',
                 'osulazer.exe',
-                // osu!somtum's own stable build (Somtum.Client, stable40 + cuttingedge). On Linux
+                // somtum.fun's own stable build (Somtum.Client, stable40 + cuttingedge). On Linux
                 // (Wine) /proc/<pid>/comm cuts names at 15 chars: "somtum-stable.e" still matches.
                 ...SOMTUM_STABLE_PROCESS_NAMES
             ]);

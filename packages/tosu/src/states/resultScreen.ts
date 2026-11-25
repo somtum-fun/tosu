@@ -182,7 +182,7 @@ export class ResultScreen extends AbstractState {
             this.pp = curPerformance.pp;
             this.fcPP = fcPerformance.pp;
 
-            // osu!somtum: pp as the server pays it (Relax/Autopilot included).
+            // somtum.fun: pp as the server pays it (Relax/Autopilot included).
             if (beatmapPP.somtum.ready) {
                 const somtumLazer = this.game.client === ClientType.lazer;
                 const somtum = beatmapPP.somtum.fromStatistics(

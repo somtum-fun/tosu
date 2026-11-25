@@ -37,7 +37,7 @@ const deleteNotLocked = async (filePath: string) => {
     }
 };
 
-/** osu!somtum's fork updates from its own releases, never upstream's (that would drop the
+/** somtum.fun's fork updates from its own releases, never upstream's (that would drop the
  * somtum-stable.exe support and somtum pp). */
 const UPDATE_REPOSITORY = 'somtum-fun/tosu';
 

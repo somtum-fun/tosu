@@ -1,5 +1,5 @@
-> **osu!somtum fork.** This is [tosu](https://github.com/tosuapp/tosu) for [osu!somtum](https://somtum.fun):
-> - works with osu!somtum's own stable client (`somtum-stable.exe`, stable40 and cuttingedge), including
+> **somtum.fun fork.** This is [tosu](https://github.com/tosuapp/tosu) for [somtum.fun](https://somtum.fun):
+> - works with somtum.fun's own stable client (`somtum-stable.exe`, stable40 and cuttingedge), including
 >   when it lives outside the osu! folder (`SOMTUM_OSU_DIR` / `somtum-stable.json`);
 > - pp comes from [somtum-pp](https://github.com/somtum-fun/somtum-pp): the pp the somtum server pays,
 >   with **Relax** (akatsuki osu_2019) and **Autopilot** pp and stars;

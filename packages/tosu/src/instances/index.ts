@@ -59,7 +59,7 @@ export abstract class AbstractInstance {
     isDestroyed: boolean = false;
     isTourneyManager: boolean = false;
     isTourneySpectator: boolean = false;
-    /** osu!somtum's own stable build (Somtum.Client). */
+    /** somtum.fun's own stable build (Somtum.Client). */
     isSomtumClient: boolean = false;
 
     ipcId: number = 0;
